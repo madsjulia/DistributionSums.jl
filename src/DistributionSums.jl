@@ -16,8 +16,18 @@ function DistributionSum(numsamples::Int, bounds::Vector, dists...)
 	convdist = Float64[]
 	probability = 1.
 	for d in dists
-		probability *= (Distributions.cdf(d, bounds[2]) - Distributions.cdf(d, bounds[1]))
 		map!(x->Distributions.pdf(d, x), pdfvals, xs)
+		highprob = Distributions.cdf(d, bounds[2])
+		lowprob = Distributions.cdf(d, bounds[1])
+		sampleprob = sum(pdfvals) * ((bounds[2] - bounds[1]) / length(pdfvals))
+		if isnan(highprob) || isnan(lowprob)
+			probability *= sampleprob
+		else
+			probability *= (Distributions.cdf(d, bounds[2]) - Distributions.cdf(d, bounds[1]))
+		end
+		if abs(sampleprob - (highprob - lowprob)) > 0.001
+			warn("samples may be insufficient error is $(100 * abs(sampleprob - (highprob - lowprob)))%")
+		end
 		if length(convdist) == 0
 			convdist = copy(pdfvals)
 		else
