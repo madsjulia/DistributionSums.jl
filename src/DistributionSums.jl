@@ -35,7 +35,7 @@ function DistributionSum(numsamples::Int, bounds::Vector, dists...)
 end
 
 function pdf(d::DistributionSum, x::Real)
-	d.interp[x]
+	max(0., d.interp[x])
 end
 
 end

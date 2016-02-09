@@ -8,6 +8,7 @@ function basictest(N, u, bounds, truepdf)
 	pdfs = map(x->Distributions.pdf(upu, x), xs)
 	truepdfs = map(truepdf, xs)
 	for i = 1:length(xs)
+		@test pdfs[i] >= 0
 		@test_approx_eq_eps pdfs[i] truepdfs[i] 4 / N
 	end
 end
