@@ -9,7 +9,7 @@ type DistributionSum <: Distributions.Distribution
 	truncatedprobability::Float64
 end
 
-function DistributionSum_old(numsamples::Int, bounds::Vector, dists...)
+function DistributionSum(numsamples::Int, bounds::Vector, dists...)
 	@assert length(bounds) == 2
 	xs = linspace(bounds[1], bounds[2], numsamples)
 	pdfvals = Array(Float64, numsamples)
@@ -33,8 +33,6 @@ function DistributionSum_old(numsamples::Int, bounds::Vector, dists...)
 	end
 	DistributionSum(Grid.CoordInterpGrid(range, convdist, 0., Grid.InterpLinear), truncatedprobability)
 end
-
-DistributionSum(args...) = DistributionSum_old(args...)
 
 function pdf(d::DistributionSum, x::Real)
 	d.interp[x]
